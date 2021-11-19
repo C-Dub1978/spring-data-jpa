@@ -1,6 +1,7 @@
 package site.cswilson.database.databasedemo;
 
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -35,6 +36,21 @@ public class DatabaseDemoApplication implements CommandLineRunner {
 		
 		Person person = dao.findById(1005);
 		logger.info("Found by id -> {}", person.toString());
+		
+		List<Person> named = dao.findByName("Perry");
+		logger.info("Found by name -> {}", named.toString());
+		
+		int numberRowsDeleted = dao.deleteById(1002);
+		logger.info("Deleted person, number of rows deleted -> {}", numberRowsDeleted);
+		
+		Person newPerson = new Person(2001, "Jackson", "Cleveland", new Date());
+		dao.insertPerson(newPerson);
+		logger.info("New person is -> {}", dao.findById(newPerson.getId()));
+		
+		newPerson.setName("eljkdskfja;lkdsf");
+		dao.updatePerson(newPerson);
+		Person found = dao.findById(2001);
+		logger.info("Updated person -> {}", found.toString());
 	}
 
 }
