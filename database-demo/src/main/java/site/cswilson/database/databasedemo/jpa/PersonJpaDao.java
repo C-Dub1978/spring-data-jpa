@@ -1,4 +1,4 @@
-package site.cswilson.database.databasedemo.entity;
+
 
 import java.util.Date;
 
