@@ -11,15 +11,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import site.cswilson.database.databasedemo.jdbc.PersonJdbcDAO;
-import site.cswilson.database.databasedemo.jdbc.models.Person;
+import site.cswilson.database.databasedemo.entity.Person;
+import site.cswilson.database.databasedemo.jdbc.PersonJdbcDao;
 
 @SpringBootApplication
 public class DatabaseDemoApplication implements CommandLineRunner {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	PersonJdbcDAO dao;
+	PersonJdbcDao dao;
 
 	public static void main(String[] args) {
 		SpringApplication.run(DatabaseDemoApplication.class, args);

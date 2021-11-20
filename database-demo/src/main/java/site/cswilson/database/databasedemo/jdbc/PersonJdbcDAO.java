@@ -9,10 +9,10 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import site.cswilson.database.databasedemo.jdbc.models.Person;
+import site.cswilson.database.databasedemo.entity.Person;
 
 @Repository
-public class PersonJdbcDAO {
+public class PersonJdbcDao {
 	
 	@Autowired
 	JdbcTemplate jdbcTemplate;
