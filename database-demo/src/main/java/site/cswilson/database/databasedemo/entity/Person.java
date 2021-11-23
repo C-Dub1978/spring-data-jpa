@@ -2,18 +2,25 @@ package site.cswilson.database.databasedemo.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQuery(name = "find_all_persons", query ="select p from Person p")
 public class Person {
 	
 	@Id
 	@GeneratedValue
 	private int id;
+	
+	@Column(nullable = false)
 	private String name;
+	@Column
 	private String location;
+	@Column
 	private Date birthDate;
 	
 	public Person() {}
