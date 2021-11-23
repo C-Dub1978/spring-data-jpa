@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import site.cswilson.database.databasedemo.entity.Person;
 import site.cswilson.database.databasedemo.jdbc.PersonJdbcDao;
 
-@SpringBootApplication
+// @SpringBootApplication
 public class DatabaseDemoApplication implements CommandLineRunner {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
