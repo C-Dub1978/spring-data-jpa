@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-HibernateDemoApplication<hibernate-demo>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "mainClass": "site.cswilson.hibernatedemo.HibernateDemoApplication",
+      "projectName": "hibernate-demo",
+      "args": ""
+    }
+  ]
+}
