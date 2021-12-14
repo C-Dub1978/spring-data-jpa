@@ -1,0 +1,30 @@
+@NamedQuery - used to create NON native sql queries using JPQL
+@NamedQueries - hash of multiple @NamedQuery (you cant add multiple @NamedQuery annotations to
+a class, you must wrap in @NamedQueries({ value = {
+    @NameQuery(........)
+}}))
+
+These will be added to the actual Entity class. They can be parameterized with named (:paramName) or
+positional (1?)
+
+Heres how to deal with parameters
+
+1. set it (positional params)
+Query query = em.createNativeQuery("SELECT * FROM COURSE WHERE id = ?", Course.class);
+// The first parameter is positional, so if you had a more complex query with multiple params,
+// you could just continue to set the parameters as many times as needed - I.E.
+
+Query query = em.createNativeQuery(
+    "SELECT * FROM COURSE WHERE id = ?1 AND name = ?2"
+)
+query.setParameter(1, 1001L).setParameter(2, "course name");
+query.getResultList();
+
+2. set it (named params)
+Query query = em.createNativeQuery("SELECT * FROM COURSE WHERE id = :id AND name = :name);
+query.setParameter("id", 1001L).setParameter("name", "Some Name to Query");
+
+Keep in mind - there are only sometimes that you have to used native queries instead of JPQL - 
+one of those instances is if you are doing a MASS update on a bunch of records. The reasons for this is
+that if you want to use JPA, you'd have to 1. get the row, update it. Get the next row, update it.....
+this would take forever and would be highly inefficient

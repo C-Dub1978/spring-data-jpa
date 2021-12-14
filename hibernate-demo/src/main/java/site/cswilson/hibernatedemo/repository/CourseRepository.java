@@ -13,10 +13,7 @@ import org.springframework.stereotype.Repository;
 import site.cswilson.hibernatedemo.entity.Course;
 
 @Repository
-// Adding this annotation to class level - this means any public method in this
-// class will use a transaction while running
-// You can also annotate at the method level, for any method that is manipulating data
-@Transactional
+// @Transactional
 public class CourseRepository {
 
 	// To create a NEW entity, or update existing, use em.persist()
@@ -25,13 +22,15 @@ public class CourseRepository {
 	//    those new changes wont persist
 	// to use em.detach(), call it, from then on any changes to the entity won't be tracked by
 	//    the entitymanager because youve detached it from the em
+	// to use em.refresh(), call it - it will instantly ditch any staged changes to an entity,
+	//    and will refresh the entity with what is currently in the database
 	
 	@PersistenceContext
 	EntityManager em;
 
 	public List<Course> findAll() throws Exception {
 		try {
-			Query query = this.em.createNamedQuery("Course.findAll");
+			Query query = this.em.createNamedQuery("find_all_courses");
 			List<Course> list = new ArrayList<Course>();
 			for (Object o : query.getResultList()) {
 				list.add((Course) o);
@@ -74,6 +73,9 @@ public class CourseRepository {
 		}
 	}
 	
+	@Transactional
+	// Since this method is calling another method that is annotated with @Transactional,
+	//   we need to annotate this method as @Transactional as well
 	public void deleteCourseById(Long id) {
 		Course course = findById(id);
 		this.deleteCourse(course);

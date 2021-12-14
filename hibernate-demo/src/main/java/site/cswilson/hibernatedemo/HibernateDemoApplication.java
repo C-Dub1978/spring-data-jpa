@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import site.cswilson.hibernatedemo.entity.Course;
 import site.cswilson.hibernatedemo.repository.CourseRepository;
 
 @SpringBootApplication
@@ -23,7 +21,6 @@ public class HibernateDemoApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		// TODO Auto-generated method stub
 		logger.info("Getting Course by id 1 -> {}", this.repository.findById(1L).toString());
 		logger.info("Deleting Course by id 1 -> {}");
 		this.repository.deleteCourseById(1L);
