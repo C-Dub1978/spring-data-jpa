@@ -25,6 +25,7 @@ Query query = em.createNativeQuery("SELECT * FROM COURSE WHERE id = :id AND name
 query.setParameter("id", 1001L).setParameter("name", "Some Name to Query");
 
 Keep in mind - there are only sometimes that you have to used native queries instead of JPQL - 
-one of those instances is if you are doing a MASS update on a bunch of records. The reasons for this is
-that if you want to use JPA, you'd have to 1. get the row, update it. Get the next row, update it.....
+one of those instances is if you are doing a MASS update on a bunch of records. If you want to use JPA, you'd have to 1. get the row, update it. Get the next row, update it.....
 this would take forever and would be highly inefficient
+
+REMEMBER - IF YOU ARE USING NATIVE QUERIES, YOU ARE NOT MAKING USE OF PERSISTENCE CONTEXT SO BE AWARE
