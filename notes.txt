@@ -28,4 +28,93 @@ Keep in mind - there are only sometimes that you have to used native queries ins
 one of those instances is if you are doing a MASS update on a bunch of records. If you want to use JPA, you'd have to 1. get the row, update it. Get the next row, update it.....
 this would take forever and would be highly inefficient
 
-REMEMBER - IF YOU ARE USING NATIVE QUERIES, YOU ARE NOT MAKING USE OF PERSISTENCE CONTEXT SO BE AWARE
+REMEMBER - IF YOU ARE USING NATIVE QUERIES, YOU ARE NOT MAKING USE OF PERSISTENCE CONTEXT SO BE AWARE,
+YOU NEED TO MANUALLY REFRESH AND TRACK
+
+=============================================
+
+JPA relationships
+
+In our upcoming refactors, we will soon have the following entities:
+Course
+Student
+SchoolIdentification
+CourseReview
+Grade
+
+@ManyToMany
+Course <---> Student (a course can have many students enrolled, and a student can be enrolled in many courses)
+
+@OneToOne
+Student <---> Identification (a student can have ONE school identification card, and a card can only be associated with 1 student)
+
+@ManyToOne
+Course <---> CourseReview
+A Course can have multiple CourseReviews. However, a CourseReview, can only be associated with a single course.
+(We are looking at this from the CourseReview perspective, its @ManyToOne - meaning that many CourseReviews can be associated with a single Course)
+(If we look at it from the Course perspective, we can define it as @OneToMany, being that ONE single course can have many reviews)
+
+
+@OneToOne details
+****** IMPORTANT ********
+ONE TO ONE RELATIONSHIPS BY DEFAULT ARE ALWAYS EAGERLY FETCHED - 
+you can also convert this to LAZY fetching as well, tbd...
+
+In our case (learning, not real world), a student can only have 1 address. We
+cant associated a student with multiple addresses. So for the relationship, we can
+say that:
+
+Student <----> Address is a OneToOne relationship. To define this, lets think about
+sql first - we can say that a Student object can have a field which has a foreign
+key mapped to an Address instance (which is the primary key of the Address).
+OR, the other way around, we can say an Address
+instance can be mapped to a foreign key of a Student (with student primary key being
+the foreign key)
+
+So basically in a 1 to 1, you can declare inside the student class, a
+@OneToOne
+private Adress adress;
+
+OR
+
+you can declare inside the address class, a
+@OneToOne
+private Student student;
+
+wherever you choose to define a @OneToOne, you can say that inside that entity,
+its OWNS the relationship for a 1 to 1, it does NOT have to be a 2 way relation
+
+Lazy vs Eager -
+By deafult if you do not annotate an entity field which has a relationship,
+with a fetch strategy, its gonna try to EAGER fetch.
+
+so If we look at our Student (or Address class), simply add @OneToOne(fetch=FetchType.LAZY)
+Keep in mind, doing it this way - when we search for a student for example, like
+Student testStudent = em.find(Student.class, 10L);
+// ERROR ON THE NEXT LINE
+Address address = student.getAddress() # <------ Exception thrown
+// To avoid this, make sure any method that is trying to retrieve a Student and then trying to get its
+// Address in the same trasaction, make sure the method is marked with @Transactional
+
+Lazy fetching ONLY gets relationship objects from one specific object type when you specifically
+ASK for those relationship object
+
+//////////// HUGE ISSUE - IF YOU ARE USING ENTITY MANAGER, AND ARE FUCKING WITH THINGS
+INSIDE A METHOD - LETS SAY YOU HAVE A CHAIN OF DB CALLS -
+
+public void entityWeirdness() {
+    Student student = this.em.find(Student.class, 12L); // touching the database 1, em is tracking
+    student.setFirsttName("Chris");
+    student.setLasttName("Chelios");
+
+    // WE ARE STILL WITHIN THE ENTITYMANAGER CONTEXT AND STUFF WILL PERSIST
+    // UNLESS FOR SOME REASON SOMETHING FUCKING FAILS - IF WE DONT ANNOTATE THE ABOVE
+    // METHOD WITH @TRANSACTIONAL, if the call to student.setLastName fails, youre going
+    // to fuck your databse up.
+}
+
+BOOOOOM! If the above line getting the address fails, if we mark it with @Transactional,
+then once the address 'get' line failse, we roll the whole transaction back and we dont
+fuck the database up
+
+

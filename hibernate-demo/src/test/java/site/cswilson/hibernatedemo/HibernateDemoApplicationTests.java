@@ -19,6 +19,9 @@ class HibernateDemoApplicationTests {
 	@Autowired
 	CourseRepository repository;
 
+	@Autowired
+	
+
 	@Test
 	void findById() {
 		Course course = repository.findById(2L);
