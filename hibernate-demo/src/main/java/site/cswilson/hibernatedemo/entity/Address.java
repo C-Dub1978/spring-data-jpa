@@ -2,8 +2,10 @@ package site.cswilson.hibernatedemo.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Address {
@@ -25,6 +27,9 @@ public class Address {
 
     @Column(nullable = false)
     private String state;
+
+    @OneToOne(fetch=FetchType.LAZY, mappedBy = "address")
+    private Student student;
 
     protected Address() {
     }
@@ -83,6 +88,14 @@ public class Address {
 
     public void setState(String state) {
         this.state = state;
+    }    
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     

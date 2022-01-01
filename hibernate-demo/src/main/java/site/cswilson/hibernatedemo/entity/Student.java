@@ -24,6 +24,9 @@ public class Student {
     @OneToOne(fetch=FetchType.LAZY)
     private Address address;
 
+    @OneToOne(fetch=FetchType.LAZY)
+    private StudentGrade studentGrade;
+
     protected Student() {}
 
     public Student(String first, String last) {
@@ -62,6 +65,16 @@ public class Student {
     public void setAddress(Address address) {
         this.address = address;
     }
+
+    public StudentGrade getStudentGrade() {
+        return studentGrade;
+    }
+
+    public void setStudentGrade(StudentGrade studentGrade) {
+        this.studentGrade = studentGrade;
+    }
+
+    
 
     @Override
     public String toString() {

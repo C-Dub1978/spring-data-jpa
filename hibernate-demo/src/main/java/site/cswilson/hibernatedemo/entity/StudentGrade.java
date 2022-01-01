@@ -1,9 +1,11 @@
 package site.cswilson.hibernatedemo.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class StudentGrade {
@@ -15,12 +17,21 @@ public class StudentGrade {
 
     private Double gpa;
 
+    @OneToOne(fetch=FetchType.LAZY, mappedBy = "studentGrade")
+    private Student student;
+
     protected StudentGrade() {
     }
 
     public StudentGrade(String finalGrade, Double gpa) {
         this.finalGrade = finalGrade;
         this.gpa = gpa;
+    }
+
+    public StudentGrade(String finalGrade, Double gpa, Student student) {
+        this.finalGrade = finalGrade;
+        this.gpa = gpa;
+        this.student = student;
     }
 
     public Long getId() {
@@ -46,6 +57,16 @@ public class StudentGrade {
     public void setGpa(Double gpa) {
         this.gpa = gpa;
     }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    
 
     @Override
     public String toString() {

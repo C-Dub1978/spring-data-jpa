@@ -115,6 +115,48 @@ public void entityWeirdness() {
 
 BOOOOOM! If the above line getting the address fails, if we mark it with @Transactional,
 then once the address 'get' line failse, we roll the whole transaction back and we dont
-fuck the database up
+fuck the database
 
+Moral of the story is mark the methods that are manipluation data with @Transactional
 
+As soon as you define somthing with @Transactional, inside youre methods, you are
+dealing with the exact moment that involves the persistence context
+
+At the end of the day - if you are using entityManager -
+if you call a method thats not annotated with @Transactional
+
+public void entityWeirdness() {
+    Object myObject = em.findSomethingById(1L);
+    object.setSomeProperty("exception thrown"); <======= BOOOM we have not annotated with @Transactional
+    // so the line above me will fail
+
+}
+
+====================================================
+
+@OneToOne - bidirectional relationships
+The way we have it, we have annotated our Student entity so far with a @OnetoOne on its
+Address and StudentGrade fields. With JUST that annotation, we can get a student object,
+then from it call student.getAddress() or student.getStudentGrade(). 
+
+Shouldnt we be able to do the opposite? 
+
+Yes! We should be able to retrieve an Address or StudentGrade entity from the db, and from either
+call entity.getStudent()
+
+As long as we annotate both the Address and StudentGrade entities with a @OneToOne with its Student
+field, we can then get the Student entity from either of those. If we DONT annotate the Address
+and Student entities, we will not be able to get the Student from either.
+IMPORTANT!
+If we just set this up as above, the student table will now have 2 new fields - address_id and
+student_grade_id
+Both the address and student_grade tables will also have a new field, student_id.
+This is BAD, we are storing duplicate data in these fields, so in order to keep things clean
+in the DB, we need to specify an "Owning" side of the @OneToOne
+
+Pick which entity you want to be the owner (student -> address), (student -> studentGrade), or vice
+versa. We will choose to have the student entity be the owner, so we must add the following to
+the @OneToOne in both the Address and StudentGrade entities:
+@OneToOne(fetch=FetchType.LAZY, mappedBy="student") <- student is the actual field name....
+
+(remember, you add the mappedBy="" to the NON owning side, not the other way around)
