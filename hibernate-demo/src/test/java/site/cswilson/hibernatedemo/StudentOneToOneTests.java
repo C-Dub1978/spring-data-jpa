@@ -36,7 +36,7 @@ public class StudentOneToOneTests {
         assertEquals(fetchedStudent.getFirstName(), student.getFirstName());
     }
 
-    @Test
-    @Transactional
-    public void retrieveStudentFromStudentGrade
+    // @Test
+    // @Transactional
+    // public void retrieveStudentFromStudentGrade
 }

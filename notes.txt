@@ -35,7 +35,7 @@ YOU NEED TO MANUALLY REFRESH AND TRACK
 
 JPA relationships
 
-In our upcoming refactors, we will soon have the following entities:
+`In our upcoming refactors, we will soon have the following entities:
 Course
 Student
 SchoolIdentification
@@ -160,3 +160,35 @@ the @OneToOne in both the Address and StudentGrade entities:
 @OneToOne(fetch=FetchType.LAZY, mappedBy="student") <- student is the actual field name....
 
 (remember, you add the mappedBy="" to the NON owning side, not the other way around)
+
+==============================================
+
+Q: When does hibernate send updates to the database?
+
+A: Take the following transactional method:
+
+@Transactional
+public void changeStuff() {
+    // Create 2 objects
+
+    em.persist(obj1); < - The insert query gets fired
+    em.persist(obj2); < - The insert query gets fired
+
+    // Change obj1 < - The update query is fired
+    // Change obj2 < - The update query is fired
+}
+
+Hibernate is efficient, and thus will stage all the changes inside a trasactional method, and
+will wait until the last possible second to query the DB.
+
+Lets say the update on line 178 fails...... At that point since this method is transactional,
+Hibernate will rollback ALL changes (lines 174 and 175, 177, 178), because the entityManager is
+keeping track of the current context...... So what would happen is:
+
+174 -> insert obj1 query is cached
+175 -> insert obj2 query is cached
+
+177 -> update obj1 query is cached
+178 -> update obj2 <<<<< SOMETHING FAILS
+
+Since the entityManager knows we had a failure, it will rollback and will NOT fire an of the staged queries
