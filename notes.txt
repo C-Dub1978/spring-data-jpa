@@ -191,4 +191,6 @@ keeping track of the current context...... So what would happen is:
 177 -> update obj1 query is cached
 178 -> update obj2 <<<<< SOMETHING FAILS
 
-Since the entityManager knows we had a failure, it will rollback and will NOT fire an of the staged queries
+Since the entityManager knows we had a failure, it will rollback and will NOT fire any of the staged queries.
+However, if line 192 does NOT fail, the entitymanager will then fire all of those queries at the end of
+the method.

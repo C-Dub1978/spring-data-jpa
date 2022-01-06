@@ -13,7 +13,7 @@ public class StudentGrade {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-    private String finalGrade;
+    private Character finalGrade;
 
     private Double gpa;
 
@@ -23,12 +23,12 @@ public class StudentGrade {
     protected StudentGrade() {
     }
 
-    public StudentGrade(String finalGrade, Double gpa) {
+    public StudentGrade(Character finalGrade, Double gpa) {
         this.finalGrade = finalGrade;
         this.gpa = gpa;
     }
 
-    public StudentGrade(String finalGrade, Double gpa, Student student) {
+    public StudentGrade(Character finalGrade, Double gpa, Student student) {
         this.finalGrade = finalGrade;
         this.gpa = gpa;
         this.student = student;
@@ -42,11 +42,11 @@ public class StudentGrade {
         this.id = id;
     }
 
-    public String getFinalGrade() {
+    public Character getFinalGrade() {
         return finalGrade;
     }
 
-    public void setFinalGrade(String finalGrade) {
+    public void setFinalGrade(Character finalGrade) {
         this.finalGrade = finalGrade;
     }
 
