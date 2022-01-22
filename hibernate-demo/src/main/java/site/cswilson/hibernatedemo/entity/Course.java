@@ -1,6 +1,8 @@
 package site.cswilson.hibernatedemo.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,6 +32,10 @@ public class Course {
 	// If the column name is 'name', you don't need this, its implicit
 	@Column(name = "name", nullable = false)
 	private String name;
+
+	@OneToMany(mappedBy="course")
+	private List<CourseReview> courseReviews = new ArrayList<CourseReview>();
+
 	@UpdateTimestamp
 	private LocalDateTime lastUpdatedDate;
 	@CreationTimestamp
@@ -46,6 +53,18 @@ public class Course {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<CourseReview> getCourseReviews() {
+		return this.courseReviews;
+	}
+
+	public void addCourseReview(CourseReview review) {
+		this.courseReviews.add(review);
+	}
+
+	public void removeCourseReview(CourseReview review) {
+		this.courseReviews.remove(review);
 	}
 
 	public Long getId() {

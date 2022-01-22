@@ -194,3 +194,94 @@ keeping track of the current context...... So what would happen is:
 Since the entityManager knows we had a failure, it will rollback and will NOT fire any of the staged queries.
 However, if line 192 does NOT fail, the entitymanager will then fire all of those queries at the end of
 the method.
+
+IF you wanted to push any/all of the staged queries before the end of the method hits, simply call
+em.flush(); - in this case all queries will fire to the db. IF something fails after the em.flush(),
+hibernate is smart enough to roll back ALL the changes, even if they were fired to the db. Hibernate
+waits till the END of the transaction.......
+
+Why do we need @Transactional in unit tests sometimes?
+If you are making changes with a database in any way, and are NOT using a repository, you need to
+annotate with this. If a method calls another method which interacts with the db, you need to annotate.
+If you are using a repository within a unit test, you dont need to annotate your unit test method.
+Basically anytime you are interacting directly with EntityManager instead of a repository, use the
+annotation when you are changing data.
+
+Read only ops:
+take this for instance:
+
+List<Comment> someReadOnlyMethod() {
+    User user = em.find(User.class, 1L); <- succeeds
+    List<Comments> comments = user.getComments(); < - FAILS
+    return comments;
+}
+
+In this case, the first line will succeed. Lets assum that the comments for a user are Lazy loaded.
+Since with the first line we are using EntityManager, that line itself becomes a single transaction -
+that is to say that we will successfully pull that user from the db, but as soon as that line finishes
+execution, the transaction automatically finished, and we are no longer within a Transaction.
+The next line will fail, because we are NOT within a transaction, and hence do NOT have a connection to
+the db. When we are dealing with read-only operations, as long as you are directly using the EntityManager
+you do NOT need to annotate the method with @Transactional. If you try to hit the db without using em,
+you will fail without the annotation.
+
+@DirtiesContext inside test classes - when and why?
+Lets say you have a test class that has methods that would change actual data in the db. We don't want
+to do this! You are mutating your data from within a test environment. In each method where this could
+happen, we want to leave the data as it was before you ran unit tests. Always use @DirtiesContext - it
+will return all changes to their previous state.
+
+=====================================================
+
+Advanced relationships - @ManyToOne, @ManyToMany, etc
+
+In our current state, heres an example of @ManyToOne (which is the same as @OneToMany) -
+
+One single course can have many reviews. For the database design, we don't want to be storing foreign
+keys and it would be awful practice to have a column in the Course table which has a list of
+CourseReview id's...... In this case, we want to find the "One" side of the relationship, which in
+this case is the Course entity, and use its id in the "Many" side. So in our case, we could simply
+add a course_id field to the "Many" side, meaning add it to the CourseReview table.
+
+So now that we have designed the relationship for the database and entities, we have to define
+the mapping inside our entities. Inside the "One" entity class, add the relationship -
+
+public Course {
+    ......stuff
+
+    @OneToMany // One course, can have many course reviews
+    private List<Review> reviews = new ArrayList<>();
+
+    ......more stuff
+}
+
+For the getters/setters - getter is normal.
+For the setters, its a little different. You wouldnt want a class to be able to add an entire list -
+potentially they could get the current list, make unwanted mutations, then set the entire list. This
+is bad. In this case, instead of a traditional setter, break it down into individual add/removes
+
+public void addReview(Review r) {
+    this.reviews.add(r);
+}
+public void removeReview(Review r) {
+    this.reviews.remove(r);
+}
+
+Now for the OTHER side of the @OneToMany
+
+in our CourseReview class, we need a relationship to a single course
+
+public Review {
+    ...stuff
+
+    private Course course;
+
+    ...moreStuff
+}
+
+Since its just one course and not a list, normal getters/setters.
+In this case, in our paragraph above where we designed the relationship in the database (that is to
+say that we added a course_id to the CourseReview table, we can say that the "Owning" side of the relationship
+is the CourseReview entity, and therefore we must add the mapping to the non-owning side - the Course
+relationship which is @OneToMany(mappedBy="course"))
+ALWAYS ADD THE MAPPING ANNOTATION TO THE NON-OWNER!!!!!!!!

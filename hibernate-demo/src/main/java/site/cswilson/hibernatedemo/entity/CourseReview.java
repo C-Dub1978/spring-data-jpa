@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class CourseReview {
@@ -18,12 +19,26 @@ public class CourseReview {
     @Column(nullable = false)
     private Integer rating;
 
+    // This in itself will add a course_id field to each row in the table.
+    // Because of this, we can say that this class is the "Owning" side of the
+    // relationship. Therefore we add the mapping to the non-owning Course class
+    // ALWAYS ADD THE MAPPING ANNOTATION TO THE NON-OWNER!!!!!!!!
+    @ManyToOne()
+    private Course course;
+
     protected CourseReview() {
     }
 
     public CourseReview(String description, Integer rating) {
         this.description = description;
         this.rating = rating;
+    }    
+
+    public CourseReview(Long id, String description, Integer rating, Course course) {
+        this.id = id;
+        this.description = description;
+        this.rating = rating;
+        this.course = course;
     }
 
     public String getDescription() {
@@ -40,6 +55,14 @@ public class CourseReview {
 
     public void setRating(Integer rating) {
         this.rating = rating;
+    }    
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     @Override
