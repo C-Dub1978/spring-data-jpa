@@ -26,16 +26,16 @@ public class HibernateDemoApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    // logger.info(
-    //   "Getting Course by id 1 -> {}",
-    //   this.courseRepository.findById(1L).toString()
-    // );
+    logger.info(
+      "Getting Course by id 1 -> {}",
+      this.courseRepository.findById(1L).toString()
+    );
     // logger.info("Deleting Course by id 1 -> {}");
     // this.courseRepository.deleteCourseById(1L);
-    // logger.info(
-    //   "Getting Course by id 1 -> {}",
-    //   this.courseRepository.findById(1L)
-    // );
+    logger.info(
+      "Getting Course by id 1 -> {}",
+      this.courseRepository.findById(1L)
+    );
     // this.studentRepository.saveStudentWithAddress();
   }
 }

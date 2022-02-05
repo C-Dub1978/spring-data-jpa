@@ -35,8 +35,10 @@ public class Address implements Serializable {
   // Bi-directional 1 to 1... The Owner is the one with @JoinColumn which
   // specifies the FK column in the inverse relation (non-owner)
   // The non-owner/inverse is still annotated with @OneToOne, but uses mappedBy
-  // to to indicate that the relationship is mapped by the OTHER entity in the
+  // to indicate that the relationship is mapped by the OTHER entity in the
   // relationship
+
+  // OWNER
   @OneToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "student_id", nullable = false)
   private Student student;
@@ -111,66 +113,5 @@ public class Address implements Serializable {
 
   public void setStudent(Student student) {
     this.student = student;
-  }
-
-  @Override
-  public String toString() {
-    return (
-      "Address [city=" +
-      city +
-      ", id=" +
-      id +
-      ", state=" +
-      state +
-      ", streetName=" +
-      streetName +
-      ", streetNumber=" +
-      streetNumber +
-      ", zipCode=" +
-      zipCode +
-      "]"
-    );
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((city == null) ? 0 : city.hashCode());
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    result = prime * result + ((state == null) ? 0 : state.hashCode());
-    result =
-      prime * result + ((streetName == null) ? 0 : streetName.hashCode());
-    result =
-      prime * result + ((streetNumber == null) ? 0 : streetNumber.hashCode());
-    result = prime * result + ((zipCode == null) ? 0 : zipCode.hashCode());
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
-    Address other = (Address) obj;
-    if (city == null) {
-      if (other.city != null) return false;
-    } else if (!city.equals(other.city)) return false;
-    if (id == null) {
-      if (other.id != null) return false;
-    } else if (!id.equals(other.id)) return false;
-    if (state == null) {
-      if (other.state != null) return false;
-    } else if (!state.equals(other.state)) return false;
-    if (streetName == null) {
-      if (other.streetName != null) return false;
-    } else if (!streetName.equals(other.streetName)) return false;
-    if (streetNumber == null) {
-      if (other.streetNumber != null) return false;
-    } else if (!streetNumber.equals(other.streetNumber)) return false;
-    if (zipCode == null) {
-      if (other.zipCode != null) return false;
-    } else if (!zipCode.equals(other.zipCode)) return false;
-    return true;
   }
 }

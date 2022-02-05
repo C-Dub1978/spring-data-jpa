@@ -25,6 +25,8 @@ public class StudentGrade implements Serializable {
   // The non-owner/inverse is still annotated with @OneToOne, but uses mappedBy
   // to to indicate that the relationship is mapped by the OTHER entity in the
   // relationship
+
+  // OWNER
   @OneToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "student_id", nullable = false)
   private Student student;
