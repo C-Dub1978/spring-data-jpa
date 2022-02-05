@@ -38,15 +38,15 @@ JPA relationships
 `In our upcoming refactors, we will soon have the following entities:
 Course
 Student
-SchoolIdentification
+SchoolGrade
 CourseReview
-Grade
+Address
 
 @ManyToMany
 Course <---> Student (a course can have many students enrolled, and a student can be enrolled in many courses)
 
 @OneToOne
-Student <---> Identification (a student can have ONE school identification card, and a card can only be associated with 1 student)
+Student <---> Address (a student can have ONE address, and an address can only be associated with 1 student)
 
 @ManyToOne
 Course <---> CourseReview
@@ -241,7 +241,7 @@ One single course can have many reviews. For the database design, we don't want 
 keys and it would be awful practice to have a column in the Course table which has a list of
 CourseReview id's...... In this case, we want to find the "One" side of the relationship, which in
 this case is the Course entity, and use its id in the "Many" side. So in our case, we could simply
-add a course_id field to the "Many" side, meaning add it to the CourseReview table.
+add a course_id field to the "Many" side, meaning add a course_id field to the CourseReview table.
 
 So now that we have designed the relationship for the database and entities, we have to define
 the mapping inside our entities. Inside the "One" entity class, add the relationship -
