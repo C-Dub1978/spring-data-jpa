@@ -7,10 +7,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
-public class StudentGrade implements Serializable {
+public class CourseGrade implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,14 +27,23 @@ public class StudentGrade implements Serializable {
   // to to indicate that the relationship is mapped by the OTHER entity in the
   // relationship
 
-  // OWNER
+  // OWNER - each student grade is mapped to one student. We are choosing this as the
+  // owning side but you could easily swap the student to be the owner and use this
+  // entity as the "mappedBy = student_id" annotation
   @OneToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "student_id", nullable = false)
   private Student student;
 
-  protected StudentGrade() {}
+  // This in itself will add a course_id field to each row in the StudentGrade table.
+  // Because of this, we can say that this class is the "Owning" side of the
+  // relationship. Therefore we add the mapping to the non-owning Course class
+  // ALWAYS ADD THE MAPPING ANNOTATION (mappedBy="") TO THE NON-OWNER!!!!!!!!
+  @ManyToOne
+  private Course course;
 
-  public StudentGrade(String finalGrade, Double gpa) {
+  protected CourseGrade() {}
+
+  public CourseGrade(String finalGrade, Double gpa) {
     this.finalGrade = finalGrade;
     this.gpa = gpa;
   }
@@ -70,6 +80,14 @@ public class StudentGrade implements Serializable {
     this.student = student;
   }
 
+  public Course getCourse() {
+    return course;
+  }
+
+  public void setCourse(Course course) {
+    this.course = course;
+  }
+
   @Override
   public String toString() {
     return (
@@ -99,7 +117,7 @@ public class StudentGrade implements Serializable {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    StudentGrade other = (StudentGrade) obj;
+    CourseGrade other = (CourseGrade) obj;
     if (finalGrade == null) {
       if (other.finalGrade != null) return false;
     } else if (!finalGrade.equals(other.finalGrade)) return false;

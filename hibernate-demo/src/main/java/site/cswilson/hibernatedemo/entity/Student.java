@@ -26,7 +26,7 @@ public class Student implements Serializable {
   private Address address;
 
   @OneToOne(fetch = FetchType.LAZY, mappedBy = "student")
-  private StudentGrade studentGrade;
+  private CourseGrade studentGrade;
 
   protected Student() {}
 
@@ -67,11 +67,11 @@ public class Student implements Serializable {
     this.address = address;
   }
 
-  public StudentGrade getStudentGrade() {
+  public CourseGrade getStudentGrade() {
     return studentGrade;
   }
 
-  public void setStudentGrade(StudentGrade studentGrade) {
+  public void setStudentGrade(CourseGrade studentGrade) {
     this.studentGrade = studentGrade;
   }
 

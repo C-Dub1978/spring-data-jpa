@@ -30,7 +30,7 @@ public class HibernateDemoApplication implements CommandLineRunner {
       "Getting Course by id 1 -> {}",
       this.courseRepository.findById(1L).toString()
     );
-    // logger.info("Deleting Course by id 1 -> {}");
+    logger.info("Deleting Course by id 1 -> {}");
     // this.courseRepository.deleteCourseById(1L);
     logger.info(
       "Getting Course by id 1 -> {}",
